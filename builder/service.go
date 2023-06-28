@@ -130,7 +130,9 @@ func NewService(listenAddr string, localRelay *LocalRelay, builder IBuilder) *Se
 
 func Register(stack *node.Node, backend *eth.Ethereum, cfg *Config) error {
 	envBuilderSkBytes, err := hexutil.Decode(cfg.BuilderSecretKey)
+	fmt.Println("builder secret key", cfg.BuilderSecretKey)
 	if err != nil {
+		fmt.Println("Error 1:", err)
 		return errors.New("incorrect builder API secret key provided")
 	}
 
@@ -166,11 +168,13 @@ func Register(stack *node.Node, backend *eth.Ethereum, cfg *Config) error {
 	if cfg.EnableLocalRelay {
 		envRelaySkBytes, err := hexutil.Decode(cfg.RelaySecretKey)
 		if err != nil {
+			fmt.Println("Error 2:", err)
 			return errors.New("incorrect builder API secret key provided")
 		}
 
 		relaySk, err := bls.SecretKeyFromBytes(envRelaySkBytes[:])
 		if err != nil {
+			fmt.Println("Error 3:", err)
 			return errors.New("incorrect builder API secret key provided")
 		}
 
@@ -277,6 +281,7 @@ func Register(stack *node.Node, backend *eth.Ethereum, cfg *Config) error {
 
 	builderSk, err := bls.SecretKeyFromBytes(envBuilderSkBytes[:])
 	if err != nil {
+		fmt.Println("Error 4:", err)
 		return errors.New("incorrect builder API secret key provided")
 	}
 
