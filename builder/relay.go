@@ -155,8 +155,10 @@ func (r *RemoteRelay) SubmitBlock(msg *bellatrix.SubmitBlockRequest, _ Validator
 	return nil
 }
 
+// HO is this where blocks get submitted to the remote relay?
 func (r *RemoteRelay) SubmitBlockCapella(msg *capella.SubmitBlockRequest, _ ValidatorData) error {
 	log.Info("submitting block to remote relay", "endpoint", r.config.Endpoint)
+	fmt.Printf("SubmitBlockCapella = msg: %v", msg)
 
 	endpoint := r.config.Endpoint + "/relay/v1/builder/blocks"
 	if r.cancellationsEnabled {

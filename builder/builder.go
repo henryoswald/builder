@@ -415,9 +415,11 @@ func (b *Builder) runBuildingJob(slotCtx context.Context, proposerPubkey phase0.
 	submitBestBlock := func() {
 		queueMu.Lock()
 		if queueBestEntry.block.Hash() != queueLastSubmittedHash {
+			// ho queueBestEntry.blockValue = important?
+
 			err := b.onSealedBlock(queueBestEntry.block, queueBestEntry.blockValue, queueBestEntry.ordersCloseTime, queueBestEntry.sealedAt,
 				queueBestEntry.commitedBundles, queueBestEntry.allBundles, queueBestEntry.usedSbundles, proposerPubkey, vd, attrs)
-
+			fmt.Printf("runBuildingJob = Block: %v, BlockValue: %v, OrdersCloseTime: %v, SealedAt: %v, CommitedBundles: %v, AllBundles: %v, UsedSbundles: %v, ProposerPubkey: %v, Vd: %v, Attrs: %v\n", queueBestEntry.block, queueBestEntry.blockValue, queueBestEntry.ordersCloseTime, queueBestEntry.sealedAt, queueBestEntry.commitedBundles, queueBestEntry.allBundles, queueBestEntry.usedSbundles, proposerPubkey, vd, attrs)
 			if err != nil {
 				log.Error("could not run sealed block hook", "err", err)
 			} else {
@@ -450,7 +452,7 @@ func (b *Builder) runBuildingJob(slotCtx context.Context, proposerPubkey phase0.
 		if block.Hash() != queueLastSubmittedHash {
 			queueBestEntry = blockQueueEntry{
 				block:           block,
-				blockValue:      new(big.Int).Set(blockValue),
+				blockValue:      new(big.Int).Set(blockValue), // ho, is this it?
 				ordersCloseTime: ordersCloseTime,
 				sealedAt:        sealedAt,
 				commitedBundles: committedBundles,
@@ -471,7 +473,7 @@ func (b *Builder) runBuildingJob(slotCtx context.Context, proposerPubkey phase0.
 			"slot", attrs.Slot,
 			"parent", attrs.HeadHash,
 			"resubmit-interval", b.builderResubmitInterval.String())
-		err := b.eth.BuildBlock(attrs, blockHook)
+		err := b.eth.BuildBlock(attrs, blockHook) // ho this is where things are calculated?
 		if err != nil {
 			log.Warn("Failed to build block", "err", err)
 		}

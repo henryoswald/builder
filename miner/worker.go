@@ -2057,6 +2057,7 @@ func (w *worker) proposerTxPrepare(env *environment, validatorCoinbase *common.A
 
 	chainData := chainData{w.chainConfig, w.chain, w.blockList}
 	gas, isEOA, err := estimatePayoutTxGas(env, sender, *validatorCoinbase, w.config.BuilderTxSigningKey, chainData)
+	// ho: log out these values
 	if err != nil {
 		return nil, fmt.Errorf("failed to estimate proposer payout gas: %w", err)
 	}

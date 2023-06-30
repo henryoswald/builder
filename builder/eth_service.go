@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math/big"
 	"time"
+	"fmt"
 
 	"github.com/ethereum/go-ethereum/beacon/engine"
 	"github.com/ethereum/go-ethereum/common"
@@ -50,6 +51,7 @@ func NewEthereumService(eth *eth.Ethereum) *EthereumService {
 	return &EthereumService{eth: eth}
 }
 
+// HO: this is probably where th e matic happens
 // TODO: we should move to a setup similar to catalyst local blocks & payload ids
 func (s *EthereumService) BuildBlock(attrs *types.BuilderPayloadAttributes, sealedBlockCallback miner.BlockHookFn) error {
 	// Send a request to generate a full block in the background.
@@ -63,8 +65,9 @@ func (s *EthereumService) BuildBlock(attrs *types.BuilderPayloadAttributes, seal
 		Withdrawals:  attrs.Withdrawals,
 		BlockHook:    sealedBlockCallback,
 	}
-
 	payload, err := s.eth.Miner().BuildPayload(args)
+	fmt.Printf("BuildBlock - Parent: %s, Timestamp: %d, FeeRecipient: %s, GasLimit: %d, Random: %s, Withdrawals: %s, BlockHook: %s\n", args.Parent, args.Timestamp, args.FeeRecipient, args.GasLimit, args.Random, args.Withdrawals, args.BlockHook)
+
 	if err != nil {
 		log.Error("Failed to build payload", "err", err)
 		return err
